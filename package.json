@@ -4,7 +4,8 @@
   "description": "Belajar NodeJs Restful API",
   "main": "src/main.js",
   "scripts": {
-    "test": "jest -i"
+    "test": "jest -i",
+    "serve": "nodemon main.js"
   },
   "jest": {
     "transform": {
@@ -31,6 +32,7 @@
     "@types/uuid": "^9.0.8",
     "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
+    "nodemon": "^3.1.7",
     "prisma": "^5.10.2",
     "supertest": "^6.3.4"
   }
