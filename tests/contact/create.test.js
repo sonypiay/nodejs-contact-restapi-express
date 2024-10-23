@@ -102,9 +102,6 @@ describe("POST /api/contacts", () => {
             phone_number: '123'
         });
 
-        console.info(result_unique.status);
-        console.info(result_unique.body);
-
         expect(result_unique.status).toBe(400);
         expect(result_unique.body.errors).toBeDefined();
         expect(result_unique.body.errors).toBe('Phone number is already taken!');
