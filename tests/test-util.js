@@ -28,8 +28,33 @@ const getTestUser = async () => {
     });
 }
 
+const createTestContact = async (id) => {
+    const user = await getTestUser();
+
+    await prismaClient.contact.create({
+        data: {
+            id: id,
+            firstname: 'test',
+            lastname: 'test',
+            email: 'sony@eannovate.com',
+            phone: '12345',
+            username: user.username
+        }
+    });
+}
+
+const removeTestContact = async (username) => {
+    await prismaClient.contact.deleteMany({
+        where: {
+            username: username
+        }
+    });
+}
+
 export {
     removeTestUser,
     createTestUser,
-    getTestUser
+    getTestUser,
+    createTestContact,
+    removeTestContact
 }
