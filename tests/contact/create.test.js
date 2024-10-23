@@ -1,6 +1,6 @@
 import supertest from "supertest";
 import { web } from "../../src/application/web.js";
-import { createTestUser, removeTestContact, removeTestUser } from "../test-util.js";
+import { createTestUser, removeTestContact, removeTestUser } from "../utils/utils.js";
 
 describe("POST /api/contacts", () => {
     beforeAll(async () => {
