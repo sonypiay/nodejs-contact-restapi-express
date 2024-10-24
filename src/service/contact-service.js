@@ -4,13 +4,12 @@ import { ResponseError } from "../errors/response-error.js";
 import { validate } from '../validation/validation.js';
 import { storeContactValidation } from '../validation/contact-validation.js';
 
-const checkUniqueFields = async (request, fields) => {
+const checkUniqueFields = async (request, fields, id) => {
     const defaultFields = [
         'email',
         'phone_number'
     ];
 
-    const contactId = request.contactId ?? null;
     const whereClause = {
         AND: [
             {
@@ -25,15 +24,15 @@ const checkUniqueFields = async (request, fields) => {
         whereClause.AND.push({
             email: request.email
         });
-    } else if( fields == 'phone' ) {
+    } else if( fields == 'phone_number' ) {
         whereClause.AND.push({
             phone: request.phone_number
         });
     }
 
-    if( contactId ) {
+    if( id || id === undefined ) {
         whereClause.id = {
-            not: contactId
+            not: id
         }
     }
 
@@ -72,6 +71,43 @@ const create = async (request) => {
     });
 }
 
+const update = async (request, id) => {
+    const contactRequest = validate(storeContactValidation, request);
+    const isEmailUnique = await checkUniqueFields(contactRequest, 'email', id);
+    const isPhoneUnique = await checkUniqueFields(contactRequest, 'phone_number', id);
+
+    if( isEmailUnique ) {
+        throw new ResponseError(400, 'Email address is already taken!');
+    }
+
+    if( isPhoneUnique ) {
+        throw new ResponseError(400, 'Phone number is already taken!');
+    }
+
+    let contacts = await prismaClient.contact;
+    const hasContact = contacts.count({
+        where: {
+            id: id,
+            username: contactRequest.username
+        }
+    });
+
+    if( hasContact == 0 ) throw new ResponseError(404, 'Contact not found');
+
+    return contacts.update({
+        where: {
+            id: id,
+            username: contactRequest.username
+        },
+        data: {
+            firstname: contactRequest.firstname,
+            lastname: contactRequest.lastname,
+            email: contactRequest.email,
+            phone: contactRequest.phone_number
+        }
+    });
+}
+
 export default {
-    create
+    create, update
 }
