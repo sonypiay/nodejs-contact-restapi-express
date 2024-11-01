@@ -1,5 +1,5 @@
 {
-  "name": "nodejs-restful-api",
+  "name": "nodejst-contact-restapi-express",
   "version": "1.0.0",
   "description": "Belajar NodeJs Restful API",
   "main": "src/main.js",
